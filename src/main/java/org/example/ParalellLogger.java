@@ -2,13 +2,14 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ParalellLogger {
 
-    long paralellCalc(List<LogEntity> arrayList) {
+    long paralellCalc(List<LogEntity> arrayList, ConcurrentLinkedQueue<String> concurrentLinkedQueue) {
         //List<LogEntity> arrayList = new ArrayList<>(); // Assuming your ArrayList is already populated
         int numThreads = Runtime.getRuntime().availableProcessors(); // Retrieve the number of available processors
 
@@ -24,7 +25,7 @@ public class ParalellLogger {
             int startIndex = i * objectsPerThread;
             int endIndex = (i + 1) * objectsPerThread;
 
-            executor.execute(new ArrayListReader(arrayList, startIndex, endIndex,latch));
+            executor.execute(new ArrayListReader(arrayList, startIndex, endIndex,latch, concurrentLinkedQueue));
         }
 
         executor.shutdown();
